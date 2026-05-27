@@ -73,6 +73,15 @@ def fetch_pod_accounts():
     data = _api_get(f"{BASE_URL}/accounts?type=POD&pageSize=100")
     return data["data"]["items"]
 
+def fetch_account_detail(account_id):
+    """Fetch full account detail (includes populated balance) via GET /accounts/{id}."""
+    try:
+        data = _api_get(f"{BASE_URL}/accounts/{account_id}")
+        return data.get("data") or {}
+    except Exception as exc:
+        print(f"  Warning: could not fetch account detail for {account_id}: {exc}")
+        return {}
+
 def fetch_last_transfer_date(account_id):
     """Return the createdAt ISO string of the most recent transfer, or None."""
     try:
@@ -80,12 +89,14 @@ def fetch_last_transfer_date(account_id):
         items = data["data"]["items"]
         return items[0]["createdAt"] if items else None
     except Exception as exc:
-        print(f"  Warning: could not fetch transfers for {account_id}: {exc}")
+        # 403 means API key lacks transfer-read permission — not a fatal error
+        if "403" not in str(exc):
+            print(f"  Warning: could not fetch transfers for {account_id}: {exc}")
         return None
 
 def build_account_rows(pod_accounts):
     """
-    Match the 7 target accounts by name, fetch supplemental transfer data,
+    Match the 7 target accounts by name, fetch full account detail for balance,
     and return a list of dicts ready for HTML rendering.
     """
     lookup = {a["name"].strip().lower(): a for a in pod_accounts}
@@ -105,8 +116,10 @@ def build_account_rows(pod_accounts):
             })
             continue
 
-        bal = account.get("balance") or {}
-        print(f"  DEBUG {seq_name}: bal_keys={list(bal.keys())}, raw_bal={bal}")
+        # The list endpoint returns empty balance objects; fetch individual detail
+        detail = fetch_account_detail(account["id"])
+        bal = detail.get("balance") or account.get("balance") or {}
+        print(f"  {seq_name}: bal_keys={list(bal.keys())}")
         balance_cents = bal.get("availableBalanceInCents")
         last_updated_at = bal.get("balanceLastUpdatedAt")
         last_transfer = fetch_last_transfer_date(account["id"])
