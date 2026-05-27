@@ -2,7 +2,7 @@ name: Atlas Smiles Budget Report
 
 on:
   schedule:
-    # Runs at 13:00 UTC â 8:00 AM EST (winter) / 9:00 AM EDT (summer)
+    # Runs at 13:00 UTC (8:00 AM EST winter / 9:00 AM EDT summer)
     - cron: "0 13 * * 1,4"
 
   # Allows a manual run from the Actions tab in GitHub at any time
