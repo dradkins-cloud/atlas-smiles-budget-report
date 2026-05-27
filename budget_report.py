@@ -106,6 +106,7 @@ def build_account_rows(pod_accounts):
             continue
 
         bal = account.get("balance") or {}
+        print(f"  DEBUG {seq_name}: bal_keys={list(bal.keys())}, raw_bal={bal}")
         balance_cents = bal.get("availableBalanceInCents")
         last_updated_at = bal.get("balanceLastUpdatedAt")
         last_transfer = fetch_last_transfer_date(account["id"])
