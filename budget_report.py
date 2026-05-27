@@ -37,13 +37,13 @@ STALE_HOURS = 24  # flag balance if not refreshed within this window
 # Sequence account name -> email display name.
 # Order here controls row order in the email.
 ACCOUNT_MAP = [
-    ("Admin / Office Supplies",      "Admin / Office Supplies"),
-    ("Lab Fees",                     "Lab Fees"),
-    ("Clinical Supplies",            "Clinical Supplies"),
+    ("Admin/Office Supplies: 2%",    "Admin / Office Supplies"),
+    ("Lab Fees: 7%",                 "Lab Fees"),
+    ("Clinical Supplies: 7%",        "Clinical Supplies"),
     ("Ortho Supplies",               "Ortho Supplies"),
-    ("Jasmine Marketing",            "Internal Marketing"),
+    ("Internal Marketing",           "Internal Marketing"),
     ("Ortho Lab Fees",               "Ortho Lab Fees"),
-    ("Anais Smile Patients Now Pod", "Smile Patients Now"),
+    ("Anais Marketing",              "Smile Patients Now"),
 ]
 
 # -- Sequence API --------------------------------------------------------------
