@@ -1,0 +1,32 @@
+name: Atlas Smiles Budget Report
+
+on:
+  schedule:
+    # Runs at 13:00 UTC â 8:00 AM EST (winter) / 9:00 AM EDT (summer)
+    - cron: "0 13 * * 1,4"
+
+  # Allows a manual run from the Actions tab in GitHub at any time
+  workflow_dispatch:
+
+jobs:
+  send-budget-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run budget report
+        env:
+          SEQUENCE_API_KEY:   ${{ secrets.SEQUENCE_API_KEY }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python budget_report.py
